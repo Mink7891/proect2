@@ -4,14 +4,36 @@ import random
 
 buttons=[]
 def button_clicked(button):
-    button.setParent(None)
+    # button.setParent(None)
     print(button.column, button.row)
     text1 = button.text()
     i = button.row
     j = button.column
-    text_up=buttons[i-1][j].text()
-    if text1==text_up:
-        buttons[i-1][j].setParent(None)
+    if i!=0:
+        text_up=buttons[i-1][j].text()
+        if text1==text_up:
+            buttons[i-1][j].setParent(None)
+    if i!=len(buttons)-1:
+        text_down=buttons[i+1][j].text()
+        if text1==text_down:
+            buttons[i+1][j].setParent(None)
+    if j!=0:
+        text_left=buttons[i][j-1].text()
+        if text1==text_left:
+            buttons[i][j-1].setParent(None)
+    if j!=len(buttons)-1:
+        text_right=buttons[i][j+1].text()
+        if text1==text_right:
+            buttons[i][j+1].setParent(None)
+
+
+
+
+
+
+
+
+
 def create_button(x, y, window):
     c=random.randint(6,9)
     button=QPushButton()
