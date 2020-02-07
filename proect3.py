@@ -1,11 +1,12 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton
 import random
-
+from PyQt5.QtCore import Qt, QTimer
 
 buttons=[]
 n=10
 
 def button_clicked(button):
+    global buttons
     # button.setParent(None)
     print(button.column, button.row)
     # text1 = button.text()
@@ -30,8 +31,27 @@ def button_clicked(button):
     #         buttons[i][j+1].setParent(None)
     window.layout().addWidget(button)
 
+    for k in range(10):
+        i=8
+        while i>=0:
+            j=9
+            while j>=0:
+                if buttons[i+1][j].parent()==None:
+                    a=i
+                    while a>=0:
+                        x=buttons[a][j].x()
+                        y=buttons[a][j].y()
+                        buttons[a+1][j]=buttons[a][j]
+                        buttons[a][j].move(x,y+30)
+                        a=a-1
+                j=j-1
+
+            i=i-1
+
+
 def walk(i, j):
     global n
+    global buttons
     button=buttons[i][j]
     parent = button.parent()
     button.setParent(None)
@@ -55,6 +75,8 @@ def walk(i, j):
         text_right=buttons[i][j+1].text()
         if text1==text_right:
          walk(i,j+1)
+
+
 
 
 
@@ -112,6 +134,8 @@ if __name__ == "__main__":
         buttons.append(coluns)
         crate_button_rov(y,window, coluns, i)
         y=y+30
+
+
 
 
     # print(buttons)
