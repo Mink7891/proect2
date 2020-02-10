@@ -18,15 +18,20 @@ def button_clicked(button):
         while i>=0:
             j=9
             while j>=0:
-                if buttons[i+1][j].parent()==None:
+                if buttons[i+1][j] is not None and buttons[i+1][j].parent()==None:
                     a=i
                     while a>=0:
+                        if buttons[a][j] == None:
+                            buttons[a+1][j] = None
+                            break
                         # print("[" + str(a) + ", " + str(j) + "]", end=" ")
                         x=buttons[a][j].x()
                         y=buttons[a][j].y()
                         buttons[a+1][j]=buttons[a][j]
                         buttons[a][j].move(x,y+30)
                         buttons[a][j].row += 1
+                        if a == 0:
+                            buttons[a][j] = None
                         a=a-1
                     # print()
                 j=j-1
@@ -43,19 +48,19 @@ def walk(i, j):
 
     if parent is None:
         return
-    if i>0:
+    if i>0 and buttons[i-1][j] is not None:
         text_up=buttons[i-1][j].text()
         if text1==text_up:
             walk(i-1,j)
-    if j>0:
+    if j>0 and buttons[i][j-1] is not None:
         text_left=buttons[i][j-1].text()
         if text1==text_left:
             walk(i,j-1)
-    if i<n-1:
+    if i<n-1 and buttons[i+1][j] is not None:
         text_down=buttons[i+1][j].text()
         if text1==text_down:
          walk(i+1,j)
-    if j<n-1:
+    if j<n-1 and buttons[i][j+1] is not None:
         text_right=buttons[i][j+1].text()
         if text1==text_right:
          walk(i,j+1)
