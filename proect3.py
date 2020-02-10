@@ -7,30 +7,12 @@ n=10
 
 def button_clicked(button):
     global buttons
-    # button.setParent(None)
     print(button.column, button.row)
-    # text1 = button.text()
     i = button.row
     j = button.column
     walk(i,j)
-    # if i!=0:
-    #     text_up=buttons[i-1][j].text()
-    #     if text1==text_up:
-    #         buttons[i-1][j].setParent(None)
-    # if i!=len(buttons)-1:
-    #     text_down=buttons[i+1][j].text()
-    #     if text1==text_down:
-    #         buttons[i+1][j].setParent(None)
-    # if j!=0:
-    #     text_left=buttons[i][j-1].text()
-    #     if text1==text_left:
-    #         buttons[i][j-1].setParent(None)
-    # if j!=len(buttons)-1:
-    #     text_right=buttons[i][j+1].text()
-    #     if text1==text_right:
-    #         buttons[i][j+1].setParent(None)
-    window.layout().addWidget(button)
 
+    window.layout().addWidget(button)
     for k in range(10):
         i=8
         while i>=0:
@@ -39,13 +21,15 @@ def button_clicked(button):
                 if buttons[i+1][j].parent()==None:
                     a=i
                     while a>=0:
+                        # print("[" + str(a) + ", " + str(j) + "]", end=" ")
                         x=buttons[a][j].x()
                         y=buttons[a][j].y()
                         buttons[a+1][j]=buttons[a][j]
                         buttons[a][j].move(x,y+30)
+                        buttons[a][j].row += 1
                         a=a-1
+                    # print()
                 j=j-1
-
             i=i-1
 
 
