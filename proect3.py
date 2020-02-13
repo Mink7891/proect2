@@ -4,7 +4,6 @@ from PyQt5.QtCore import Qt, QTimer
 
 buttons=[]
 n=10
-
 def button_clicked(button):
     global buttons
     print(button.column, button.row)
@@ -13,6 +12,7 @@ def button_clicked(button):
     walk(i,j)
 
     window.layout().addWidget(button)
+
     for k in range(10):
         i=8
         while i>=0:
@@ -36,8 +36,18 @@ def button_clicked(button):
                     # print()
                 j=j-1
             i=i-1
+    #
+    # x=button.x()
+    # y=button.y()
+    # button.y_new=y+30
+    # buttons[i][j].move(x,button.y_new)
 
-
+    c=int(button.text())
+    c=c-1
+    button.setText(str(c))
+    color(button)
+    if c==0:
+        window.close()
 def walk(i, j):
     global n
     global buttons
@@ -69,17 +79,8 @@ def walk(i, j):
 
 
 
-
-
-
-def create_button(x, y, window):
-    c=random.randint(6,9)
-    button=QPushButton()
-    button.setFixedSize(30, 30)
-    button.move(x,y)
-    button.setText(str(c))
-    window.layout().addWidget(button)
-    button.clicked.connect(lambda: button_clicked(button))
+def color(button):
+    c=int(button.text())
     if c==6:
         button.setStyleSheet('QPushButton {background-color: red}')
     elif c==7:
@@ -98,6 +99,16 @@ def create_button(x, y, window):
         button.setStyleSheet('QPushButton {background-color: gold}')
     elif c==5:
         button.setStyleSheet('QPushButton {background-color: cyan}')
+
+def create_button(x, y, window):
+    button=QPushButton()
+    button.setFixedSize(30, 30)
+    button.move(x,y)
+    c=random.randint(6,9)
+    button.setText(str(c))
+    color(button)
+    window.layout().addWidget(button)
+    button.clicked.connect(lambda: button_clicked(button))
     return button
 
 
