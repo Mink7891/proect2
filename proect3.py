@@ -3,9 +3,20 @@ import random
 from PyQt5.QtCore import Qt, QTimer
 
 buttons=[]
+button_move=[]
+buttons_to_move = set()
 n=10
+timer=None
+def walk_down(buttons_set):
+    buttons = list(buttons_set)
+    for i in range(len(buttons)):
+        x=buttons[i].x()
+        y=buttons[i].y()
+        buttons[i].move(x,y+1)
+
 def button_clicked(button):
     global buttons
+    global timer
     print(button.column, button.row)
     i = button.row
     j = button.column
@@ -28,19 +39,21 @@ def button_clicked(button):
                         x=buttons[a][j].x()
                         y=buttons[a][j].y()
                         buttons[a+1][j]=buttons[a][j]
-                        buttons[a][j].move(x,y+30)
+                        buttons_to_move.add(buttons[a][j])
+                        button.y_new=y+30
+                        # buttons[a][j].move(x,button.y_new)
                         buttons[a][j].row += 1
                         if a == 0:
                             buttons[a][j] = None
                         a=a-1
-                    # print()
                 j=j-1
             i=i-1
-    #
-    # x=button.x()
-    # y=button.y()
-    # button.y_new=y+30
-    # buttons[i][j].move(x,button.y_new)
+
+
+
+
+
+
 
     c=int(button.text())
     c=c-1
@@ -48,6 +61,14 @@ def button_clicked(button):
     color(button)
     if c==0:
         window.close()
+        print("GGWP")
+
+    timer =QTimer()
+    timer.timeout.connect(lambda: walk_down(buttons_to_move))
+    timer.setInterval(30)
+    timer.start()
+
+
 def walk(i, j):
     global n
     global buttons
@@ -127,7 +148,7 @@ if __name__ == "__main__":
 
     window = QMainWindow()
     window.setFixedSize(400, 400)
-
+    window.setStyleSheet('QMainWindow {background-color: black}')
     y=40
     for i in range(n):
         coluns=[]
@@ -135,10 +156,6 @@ if __name__ == "__main__":
         crate_button_rov(y,window, coluns, i)
         y=y+30
 
-
-
-
-    # print(buttons)
 
     window.show()
     app.exec()
