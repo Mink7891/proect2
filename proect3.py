@@ -13,6 +13,8 @@ def walk_down(buttons_set):
         x=buttons[i].x()
         y=buttons[i].y()
         buttons[i].move(x,y+1)
+        if buttons[i].y() == buttons[i].y_new:
+            timer.stop()
 
 def button_clicked(button):
     global buttons
@@ -40,7 +42,7 @@ def button_clicked(button):
                         y=buttons[a][j].y()
                         buttons[a+1][j]=buttons[a][j]
                         buttons_to_move.add(buttons[a][j])
-                        button.y_new=y+30
+                        buttons[a][j].y_new=y+30
                         # buttons[a][j].move(x,button.y_new)
                         buttons[a][j].row += 1
                         if a == 0:
