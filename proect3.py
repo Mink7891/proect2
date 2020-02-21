@@ -8,13 +8,21 @@ buttons_to_move = set()
 n=10
 timer=None
 def walk_down(buttons_set):
+    global buttons_to_move
     buttons = list(buttons_set)
+    buttons_new=set()
     for i in range(len(buttons)):
         x=buttons[i].x()
         y=buttons[i].y()
-        buttons[i].move(x,y+1)
-        if buttons[i].y() == buttons[i].y_new:
+        if buttons[i].y() ==buttons[i].y_new:
+            buttons_new.add(buttons[i])
+        if buttons[i] not in buttons_new:
+            buttons[i].move(x,y+1)
+        # print(len(buttons), len(buttons_new))
+        if len(buttons)==len(buttons_new):
             timer.stop()
+            buttons_to_move=set()
+
 
 def button_clicked(button):
     global buttons
@@ -25,6 +33,11 @@ def button_clicked(button):
     walk(i,j)
 
     window.layout().addWidget(button)
+
+    for i in range(10):
+        for j in range(10):
+            if buttons[i][j] is not None:
+                buttons[i][j].y_new = None
 
     for k in range(10):
         i=8
@@ -42,7 +55,10 @@ def button_clicked(button):
                         y=buttons[a][j].y()
                         buttons[a+1][j]=buttons[a][j]
                         buttons_to_move.add(buttons[a][j])
-                        buttons[a][j].y_new=y+30
+                        if buttons[a][j].y_new is None:
+                            buttons[a][j].y_new=y+30
+                        else:
+                            buttons[a][j].y_new += 30
                         # buttons[a][j].move(x,button.y_new)
                         buttons[a][j].row += 1
                         if a == 0:
