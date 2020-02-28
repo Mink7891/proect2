@@ -7,6 +7,27 @@ button_move=[]
 buttons_to_move = set()
 n=10
 timer=None
+def add_new_buttons(button):
+    global buttons
+    global timer
+    for i in range(10):
+        if buttons[0][i] == None:
+            a=i
+            print(a)
+            x=70
+            y=-1
+            button=create_button(x+i*30,y, window)
+            for j in range(10):
+                if buttons[j][i] is not None:
+                    y=buttons[j][i].y()-30
+                    print(y)
+                    buttons_to_move.add(button)
+                    button.y_new = y
+                    break
+    timer =QTimer()
+    timer.timeout.connect(lambda: walk_down(buttons_to_move))
+    timer.setInterval(10)
+    timer.start()
 def walk_down(buttons_set):
     global buttons_to_move
     buttons = list(buttons_set)
@@ -14,7 +35,7 @@ def walk_down(buttons_set):
     for i in range(len(buttons)):
         x=buttons[i].x()
         y=buttons[i].y()
-        if buttons[i].y() ==buttons[i].y_new:
+        if buttons[i].y() >=buttons[i].y_new:
             buttons_new.add(buttons[i])
         if buttons[i] not in buttons_new:
             buttons[i].move(x,y+1)
@@ -22,6 +43,8 @@ def walk_down(buttons_set):
         if len(buttons)==len(buttons_new):
             timer.stop()
             buttons_to_move=set()
+            add_new_buttons(buttons[i])
+
 
 
 def button_clicked(button):
@@ -83,7 +106,7 @@ def button_clicked(button):
 
     timer =QTimer()
     timer.timeout.connect(lambda: walk_down(buttons_to_move))
-    timer.setInterval(30)
+    timer.setInterval(10)
     timer.start()
 
 
@@ -152,7 +175,7 @@ def create_button(x, y, window):
 
 
 def crate_button_rov(y,window, coluns, k):
-    x=40
+    x=70
     for j in range(10):
         button=create_button(x,y, window)
         coluns.append(button)
@@ -165,9 +188,9 @@ if __name__ == "__main__":
     app = QApplication([])
 
     window = QMainWindow()
-    window.setFixedSize(400, 400)
-    window.setStyleSheet('QMainWindow {background-color: black}')
-    y=40
+    window.setFixedSize(450, 450)
+    # window.setStyleSheet('QMainWindow {background-color: black}')
+    y=100
     for i in range(n):
         coluns=[]
         buttons.append(coluns)
