@@ -7,21 +7,39 @@ button_move=[]
 buttons_to_move = set()
 n=10
 timer=None
-shethi=None
+shethi=0
 def add_new_buttons(button):
     global buttons
     global timer
+    list_of_Tops=[]
+    rezultat=[]
+    count=random.randint(1,4)
     for i in range(10):
         if buttons[0][i] == None:
+            list_of_Tops.append(i)
+
+
+    for j in range(count):
+        if len(list_of_Tops) == 0:
+            break
+        a=random.randint(0,len(list_of_Tops) - 1)
+        rezultat.append(list_of_Tops[a])
+        list_of_Tops.pop(a)
+
+
+
+
+    for i in rezultat:
+        if buttons[0][i] == None:
             a=i
-            print(a)
+            # print(a)
             x=70
             y=-1
             button=create_button(x+i*30,y, window)
             for j in range(10):
                 if buttons[j][i] is not None:
                     y=buttons[j][i].y()-30
-                    print(y)
+                    # print(y)
                     buttons_to_move.add(button)
                     button.y_new = y
                     buttons[j-1][i]=button
@@ -56,7 +74,8 @@ def walk_down(buttons_set, new_buttons=False):
 def button_clicked(button):
     global buttons
     global timer
-    print(button.column, button.row)
+    global shethi
+    # print(button.column, button.row)
     i = button.row
     j = button.column
     walk(i,j)
@@ -103,12 +122,13 @@ def button_clicked(button):
 
 
     c=int(button.text())
-    c=c-1
+    if shethi>0:
+        c=c-1
+    else:
+        return shethi
     button.setText(str(c))
     color(button)
     if c==0:
-        # window.close()
-        # print("GGWP")
         buttonReply=QMessageBox.question(window, 'PyQt5 message', 'GGWP')
         print(int(buttonReply))
     timer =QTimer()
@@ -120,29 +140,33 @@ def button_clicked(button):
 def walk(i, j):
     global n
     global buttons
+    global shethi
     button=buttons[i][j]
     parent = button.parent()
     button.setParent(None)
     text1 = button.text()
-
     if parent is None:
         return
     if i>0 and buttons[i-1][j] is not None:
         text_up=buttons[i-1][j].text()
         if text1==text_up:
             walk(i-1,j)
+            shethi+=1
     if j>0 and buttons[i][j-1] is not None:
         text_left=buttons[i][j-1].text()
         if text1==text_left:
             walk(i,j-1)
+            shethi+=1
     if i<n-1 and buttons[i+1][j] is not None:
         text_down=buttons[i+1][j].text()
         if text1==text_down:
          walk(i+1,j)
+         shethi+=1
     if j<n-1 and buttons[i][j+1] is not None:
         text_right=buttons[i][j+1].text()
         if text1==text_right:
          walk(i,j+1)
+         shethi+=1
 
 
 
