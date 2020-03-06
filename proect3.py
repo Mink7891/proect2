@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
 import random
 from PyQt5.QtCore import Qt, QTimer
 
@@ -7,6 +7,7 @@ button_move=[]
 buttons_to_move = set()
 n=10
 timer=None
+shethi=None
 def add_new_buttons(button):
     global buttons
     global timer
@@ -23,12 +24,15 @@ def add_new_buttons(button):
                     print(y)
                     buttons_to_move.add(button)
                     button.y_new = y
+                    buttons[j-1][i]=button
+                    button.row = j-1
+                    button.column=i
                     break
     timer =QTimer()
-    timer.timeout.connect(lambda: walk_down(buttons_to_move))
-    timer.setInterval(10)
+    timer.timeout.connect(lambda: walk_down(buttons_to_move, new_buttons=True))
+    timer.setInterval(5)
     timer.start()
-def walk_down(buttons_set):
+def walk_down(buttons_set, new_buttons=False):
     global buttons_to_move
     buttons = list(buttons_set)
     buttons_new=set()
@@ -43,7 +47,9 @@ def walk_down(buttons_set):
         if len(buttons)==len(buttons_new):
             timer.stop()
             buttons_to_move=set()
-            add_new_buttons(buttons[i])
+            if not new_buttons:
+                add_new_buttons(buttons[i])
+
 
 
 
@@ -101,12 +107,13 @@ def button_clicked(button):
     button.setText(str(c))
     color(button)
     if c==0:
-        window.close()
-        print("GGWP")
-
+        # window.close()
+        # print("GGWP")
+        buttonReply=QMessageBox.question(window, 'PyQt5 message', 'GGWP')
+        print(int(buttonReply))
     timer =QTimer()
     timer.timeout.connect(lambda: walk_down(buttons_to_move))
-    timer.setInterval(10)
+    timer.setInterval(5)
     timer.start()
 
 
