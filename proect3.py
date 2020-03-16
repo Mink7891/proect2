@@ -1,16 +1,16 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox, QLabel
 import random
 from PyQt5.QtCore import Qt, QTimer
 
 buttons=[]
-button_move=[]
-buttons_to_move = set()
+all_buttons_to_move = []
 n=10
-timer=None
+text=0
+timers=[]
 shethi=0
 def add_new_buttons(button):
     global buttons
-    global timer
+    global timers
     list_of_Tops=[]
     rezultat=[]
     count=random.randint(1,4)
@@ -26,8 +26,8 @@ def add_new_buttons(button):
         rezultat.append(list_of_Tops[a])
         list_of_Tops.pop(a)
 
-
-
+    buttons_to_move = set()
+    all_buttons_to_move.append(buttons_to_move)
 
     for i in rezultat:
         if buttons[0][i] == None:
@@ -38,7 +38,7 @@ def add_new_buttons(button):
             button=create_button(x+i*30,y, window)
             for j in range(10):
                 if buttons[j][i] is not None:
-                    y=buttons[j][i].y()-30
+                    y=buttons[j][i].y_new-30
                     # print(y)
                     buttons_to_move.add(button)
                     button.y_new = y
@@ -47,16 +47,18 @@ def add_new_buttons(button):
                     button.column=i
                     break
     timer =QTimer()
-    timer.timeout.connect(lambda: walk_down(buttons_to_move, new_buttons=True))
+    timer.timeout.connect(lambda: walk_down(buttons_to_move, timer, new_buttons=True))
     timer.setInterval(5)
     timer.start()
-def walk_down(buttons_set, new_buttons=False):
-    global buttons_to_move
+    timers.append(timer)
+def walk_down(buttons_set, timer, new_buttons=False):
+    global timers
     buttons = list(buttons_set)
     buttons_new=set()
     for i in range(len(buttons)):
         x=buttons[i].x()
         y=buttons[i].y()
+        # print(i)
         if buttons[i].y() >=buttons[i].y_new:
             buttons_new.add(buttons[i])
         if buttons[i] not in buttons_new:
@@ -64,7 +66,8 @@ def walk_down(buttons_set, new_buttons=False):
         # print(len(buttons), len(buttons_new))
         if len(buttons)==len(buttons_new):
             timer.stop()
-            buttons_to_move=set()
+            timers.remove(timer)
+            all_buttons_to_move.remove(buttons_set)
             if not new_buttons:
                 add_new_buttons(buttons[i])
 
@@ -73,19 +76,22 @@ def walk_down(buttons_set, new_buttons=False):
 
 def button_clicked(button):
     global buttons
-    global timer
+    global timers
     global shethi
     # print(button.column, button.row)
     i = button.row
     j = button.column
     walk(i,j)
-
     window.layout().addWidget(button)
 
-    for i in range(10):
-        for j in range(10):
-            if buttons[i][j] is not None:
-                buttons[i][j].y_new = None
+
+    buttons_to_move = set()
+    all_buttons_to_move.append(buttons_to_move)
+
+    # for i in range(10):
+    #     for j in range(10):
+    #         if buttons[i][j] is not None:
+    #             buttons[i][j].y_new =  buttons[i][j].y()
 
     for k in range(10):
         i=8
@@ -118,9 +124,6 @@ def button_clicked(button):
 
 
 
-
-
-
     c=int(button.text())
     if shethi>0:
         c=c-1
@@ -132,21 +135,23 @@ def button_clicked(button):
         buttonReply=QMessageBox.question(window, 'PyQt5 message', 'GGWP')
         print(int(buttonReply))
     timer =QTimer()
-    timer.timeout.connect(lambda: walk_down(buttons_to_move))
+    timer.timeout.connect(lambda: walk_down(buttons_to_move, timer))
     timer.setInterval(5)
     timer.start()
-
+    timers.append(timer)
+    shethi=0
 
 def walk(i, j):
     global n
     global buttons
     global shethi
+    global text
     button=buttons[i][j]
     parent = button.parent()
     button.setParent(None)
-    text1 = button.text()
     if parent is None:
         return
+    text1 = button.text()
     if i>0 and buttons[i-1][j] is not None:
         text_up=buttons[i-1][j].text()
         if text1==text_up:
@@ -160,17 +165,19 @@ def walk(i, j):
     if i<n-1 and buttons[i+1][j] is not None:
         text_down=buttons[i+1][j].text()
         if text1==text_down:
-         walk(i+1,j)
-         shethi+=1
+            walk(i+1,j)
+            shethi+=1
     if j<n-1 and buttons[i][j+1] is not None:
         text_right=buttons[i][j+1].text()
         if text1==text_right:
-         walk(i,j+1)
-         shethi+=1
+            walk(i,j+1)
+            shethi+=1
 
+    if shethi>0:
+        text+=int(text1)
+        print(text)
 
-
-
+    label.setText(str(text))
 
 def color(button):
     c=int(button.text())
@@ -219,7 +226,7 @@ if __name__ == "__main__":
     app = QApplication([])
 
     window = QMainWindow()
-    window.setFixedSize(450, 450)
+    window.setFixedSize(550, 450)
     # window.setStyleSheet('QMainWindow {background-color: black}')
     y=100
     for i in range(n):
@@ -228,6 +235,19 @@ if __name__ == "__main__":
         crate_button_rov(y,window, coluns, i)
         y=y+30
 
+
+    for i in range(10):
+        for j in range(10):
+            if buttons[i][j] is not None:
+                buttons[i][j].y_new =  buttons[i][j].y()
+
+
+    label=QLabel()
+    label.setFixedSize(100,50)
+    label.move(400,225)
+    label.setText(str(text))
+    label.setStyleSheet('QLabel {background-color: silver}')
+    window.layout().addWidget(label)
 
     window.show()
     app.exec()
