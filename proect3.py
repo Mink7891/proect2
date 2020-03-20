@@ -46,6 +46,13 @@ def add_new_buttons(button):
                     button.row = j-1
                     button.column=i
                     break
+                if j==9:
+                    button.y_new = 370
+                    buttons_to_move.add(button)
+                    buttons[9][i]=button
+                    button.row = 9
+                    button.column=i
+
     timer =QTimer()
     timer.timeout.connect(lambda: walk_down(buttons_to_move, timer, new_buttons=True))
     timer.setInterval(5)
@@ -175,7 +182,7 @@ def walk(i, j):
 
     if shethi>0:
         text+=int(text1)
-        print(text)
+        # print(text)
 
     label.setText(str(text))
 
