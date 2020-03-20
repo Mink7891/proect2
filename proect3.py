@@ -1,3 +1,5 @@
+import sys
+
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QMessageBox, QLabel
 import random
 from PyQt5.QtCore import Qt, QTimer
@@ -138,9 +140,15 @@ def button_clicked(button):
         return shethi
     button.setText(str(c))
     color(button)
+
     if c==0:
-        buttonReply=QMessageBox.question(window, 'PyQt5 message', 'GGWP')
+        buttonReply = QMessageBox.question(window,'PyQt5 message', "Ты выиграл! Хочешь начать заново?", QMessageBox.Yes | QMessageBox.No )
         print(int(buttonReply))
+        if buttonReply == QMessageBox.Yes:
+            print('Yes clicked.')
+        if buttonReply == QMessageBox.No:
+            print('No clicked.')
+            sys.exit()
     timer =QTimer()
     timer.timeout.connect(lambda: walk_down(buttons_to_move, timer))
     timer.setInterval(5)
